@@ -13,3 +13,4 @@ admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(VerificationCode, VerificationCodeAdmin)
 
 admin.site.register(Chapter)
+admin.site.register(Objection)

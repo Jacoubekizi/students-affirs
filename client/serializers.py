@@ -94,11 +94,17 @@ class ObjectionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        user = self.context.get('user')
-        validated_data['user'] = user
-        instance = Objection.objects.create(**validated_data)
-        instance.save()
-        return instance
+        chapter_id = validated_data.pop('chapter').id
+        chapter = Chapter.objects.get(id=chapter_id)
+        if chapter.end_at >= timezone.datetime.now().date():
+            user = self.context.get('user')
+            validated_data['user'] = user
+            validated_data['chapter'] = chapter
+            instance = Objection.objects.create(**validated_data)
+            instance.save()
+            return instance
+        else:
+            raise serializers.ValidationError("الوقت المخصص لتقديم طلبات الإعتراض انتهى")
     
     def to_representation(self, instance):
         repr = super().to_representation(instance)
