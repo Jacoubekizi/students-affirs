@@ -4,20 +4,12 @@ from datetime import timedelta
 from firebase_admin import initialize_app, credentials
 from google.auth import load_credentials_from_file
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-+6af&7=-b(&i8n)3+*@igyms5e*)w1ihok&ldv-)ee0@)s3%ak'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
