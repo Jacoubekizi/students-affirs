@@ -54,6 +54,7 @@ class Objection(models.Model):
     year = models.CharField(max_length=20, choices=Year)
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     subject = models.CharField(max_length=40)
+    teacher = models.CharField(max_length=40)
 
     def __str__(self) -> str:
         return f'{self.user.username}-{self.type_subject}-{self.subject}-{self.name}'
