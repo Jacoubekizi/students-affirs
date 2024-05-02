@@ -14,5 +14,7 @@ urlpatterns = [
 
     # ------------------------------------------------
     path('create-objection/', CreateObjectionView.as_view(), name='create-objection'),
-    path('get-objection/', CreateObjectionView.as_view(), name='get-objection'),
+    path('list-objection/', CreateObjectionView.as_view(), name='list-objection'),
+    path('get-upt-des-objection/<str:pk>/', RetUpdDesObjectionView.as_view(), name='ret-upt-des-objection'),
+    path('list-refusel-objection/', RefuselObjectionView.as_view(), name='get-refuesl-boj')
 ]

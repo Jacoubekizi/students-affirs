@@ -55,6 +55,20 @@ class Objection(models.Model):
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     subject = models.CharField(max_length=40)
     teacher = models.CharField(max_length=40)
+    is_refusel = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.user.username}-{self.type_subject}-{self.subject}-{self.name}'
+
+class RefuselObjection(models.Model):
+    objection = models.OneToOneField(Objection, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=10000)
+
+    def __str__(self) -> str:
+        return f'{self.objection.subject} على مادة {self.objection.user.username}طلب اعتراض مرفوض باسم'
+    
+    def save(self, *args, **kwargs) -> None:
+        self.objection.is_refusel = True
+        self.objection.save()
+        super().save(*args, **kwargs)
+    

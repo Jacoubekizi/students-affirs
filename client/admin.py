@@ -9,8 +9,18 @@ class CustomUserAdmin(admin.ModelAdmin):
 class VerificationCodeAdmin(admin.ModelAdmin):
     list_display = ['user', 'code', 'is_verified']
 
+
+class ObjectionAdmin(admin.ModelAdmin):
+    # actions = ['refusal_objection']
+    # list_display = ['reason', ]
+    pass
+    # def refusal_user(self, request, queryset):
+    #     user = queryset.get(is_accepted=False)
+    #     user.delete()
+
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(VerificationCode, VerificationCodeAdmin)
 
 admin.site.register(Chapter)
-admin.site.register(Objection)
+admin.site.register(Objection, ObjectionAdmin)
+admin.site.register(RefuselObjection)

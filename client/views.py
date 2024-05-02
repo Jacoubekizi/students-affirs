@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
 from .serializers import *
 
 
@@ -150,4 +150,28 @@ class CreateObjectionView(GenericAPIView):
         user = CustomUser.objects.get(id=user_id)
         objection = user.objection_set.all()
         serializer = self.get_serializer(objection, many=True)
+        return Response(serializer.data)
+    
+    # def put(self, request):
+    #     user = request.user
+    #     data = request.data
+    #     serializer = self.get_serializer(data=data, context={'user':user, 'request':request})
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(serializer.data)
+
+class RetUpdDesObjectionView(RetrieveUpdateDestroyAPIView):
+    queryset = Objection.objects.all()
+    serializer_class = ObjectionSerializer
+    permission_classes = [IsAuthenticated,]
+
+
+class RefuselObjectionView(GenericAPIView):
+    serializer_class = RefuselObjectionSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def get(self, request):
+        user = request.user
+        refusel_obj = RefuselObjection.objects.filter(objection__user=user)
+        serializer = self.get_serializer(refusel_obj, many=True)
         return Response(serializer.data)

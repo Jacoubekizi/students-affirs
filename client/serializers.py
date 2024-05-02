@@ -106,7 +106,28 @@ class ObjectionSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("الوقت المخصص لتقديم طلبات الإعتراض انتهى")
     
+    def update(self, instance, validated_data):
+        chapter_id = validated_data.pop('chapter').id
+        chapter = Chapter.objects.get(id=chapter_id)
+        if chapter.end_at >= timezone.datetime.now().date():
+            # user = self.context.get('user')
+            # validated_data['user'] = user
+            validated_data['chapter'] = chapter
+            for attrs, value in validated_data.items():
+                setattr(instance, attrs, value)
+            instance.save()
+            return instance
+        else:
+            raise serializers.ValidationError("الوقت المخصص لتقديم طلبات الإعتراض انتهى")
+
     def to_representation(self, instance):
         repr = super().to_representation(instance)
         repr['chapter'] = instance.chapter.chapter
         return repr
+    
+class RefuselObjectionSerializer(serializers.ModelSerializer):
+    objection = ObjectionSerializer(read_only=True)
+    
+    class Meta:
+        model = RefuselObjection
+        fields = '__all__'
