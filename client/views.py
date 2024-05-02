@@ -152,13 +152,6 @@ class CreateObjectionView(GenericAPIView):
         serializer = self.get_serializer(objection, many=True)
         return Response(serializer.data)
     
-    # def put(self, request):
-    #     user = request.user
-    #     data = request.data
-    #     serializer = self.get_serializer(data=data, context={'user':user, 'request':request})
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data)
 
 class RetUpdDesObjectionView(RetrieveUpdateDestroyAPIView):
     queryset = Objection.objects.all()
@@ -175,3 +168,27 @@ class RefuselObjectionView(GenericAPIView):
         refusel_obj = RefuselObjection.objects.filter(objection__user=user)
         serializer = self.get_serializer(refusel_obj, many=True)
         return Response(serializer.data)
+    
+class CreateChoiceSubjectView(GenericAPIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = ShoiceSubjectSerializer
+
+    def post(self, request):
+        user = request.user
+        data = request.data
+        serializer = self.get_serializer(data=data, context={'user':user, 'request':request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def get(self, request):
+        user_id = request.user.id
+        user = CustomUser.objects.get(id=user_id)
+        objection = user.shoicesubject_set.all()
+        serializer = self.get_serializer(objection, many=True)
+        return Response(serializer.data)
+    
+class RetUpdDesObjectionView(RetrieveUpdateDestroyAPIView):
+    queryset = ShoiceSubject.objects.all()
+    serializer_class = ShoiceSubjectSerializer
+    permission_classes = [IsAuthenticated,]

@@ -110,8 +110,6 @@ class ObjectionSerializer(serializers.ModelSerializer):
         chapter_id = validated_data.pop('chapter').id
         chapter = Chapter.objects.get(id=chapter_id)
         if chapter.end_at >= timezone.datetime.now().date():
-            # user = self.context.get('user')
-            # validated_data['user'] = user
             validated_data['chapter'] = chapter
             for attrs, value in validated_data.items():
                 setattr(instance, attrs, value)
@@ -131,3 +129,24 @@ class RefuselObjectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = RefuselObjection
         fields = '__all__'
+
+class ShoiceSubjectSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.username', read_only=True)
+    univercity_id = serializers.IntegerField(source='user.univercity_id', read_only=True)
+
+    class Meta:
+        model = ShoiceSubject
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        validated_data['user'] = user
+        instance = ShoiceSubject.objects.create(**validated_data)
+        instance.save()
+        return instance
+    
+    def update(self, instance, validated_data):
+        for attrs, value in validated_data.items():
+            setattr(instance, attrs, value)
+        instance.save()
+        return instance

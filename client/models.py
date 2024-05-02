@@ -72,3 +72,11 @@ class RefuselObjection(models.Model):
         self.objection.save()
         super().save(*args, **kwargs)
     
+
+class ShoiceSubject(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    year = models.CharField(max_length=20, choices=Year)
+    subject = models.CharField(max_length=40)
+
+    def __str__(self) -> str:
+        return f'{self.user.username}-{self.year}-{self.subject}'
