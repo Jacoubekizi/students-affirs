@@ -20,5 +20,11 @@ urlpatterns = [
 
     # choice subject
     path('list-create-choice-subject/', CreateChoiceSubjectView.as_view(), name='list-create-choice-subject'),
-    path('get-upt-des-shoice-subject/<str:pk>/', RetUpdDesObjectionView.as_view())
+    path('get-upt-des-shoice-subject/<str:pk>/', RetUpdDesObjectionView.as_view()),
+
+    # Posters
+    path('list-posters/', ListPostersView.as_view(), name='list-posters'),
+    path('get-poster/<str:pk>/', GetPosterView.as_view(), name='get-poster'),
+    path('list-notification/', ListNotificationView.as_view(), name='list-notification'),
+    path('get-notification/<str:pk>/', GetNotificationView.as_view(), name='get-notification'),
 ]

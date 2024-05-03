@@ -150,3 +150,19 @@ class ShoiceSubjectSerializer(serializers.ModelSerializer):
             setattr(instance, attrs, value)
         instance.save()
         return instance
+    
+class PosterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Poster
+        fields = '__all__'
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        username = self.context.get('user', '')
+        repr = super().to_representation(instance)
+        repr['user'] = [user.username for user in instance.user.filter(username=username)]
+        return repr

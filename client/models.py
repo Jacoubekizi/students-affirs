@@ -1,8 +1,12 @@
+from typing import Iterable
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MaxValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
+from fcm_django.models import FCMDevice
+from firebase_admin.messaging import Message
+from firebase_admin.messaging import Notification as FirebaseNotification
 from .utils import *
 from .options import *
 
@@ -80,3 +84,35 @@ class ShoiceSubject(models.Model):
 
     def __str__(self) -> str:
         return f'{self.user.username}-{self.year}-{self.subject}'
+    
+
+class Poster(models.Model):
+    description = models.TextField()
+
+    def save(self,*args, **kwargs) -> None:
+        super().save(*args, **kwargs)
+        title = 'اعلان'
+        content = 'تم اضافة اعلان جديد انقر للاطلاع على تاتفاصيل'
+        users = CustomUser.objects.all()
+        noti = Notification.objects.create(poster = self, title=title, content=content)
+        for user  in users:
+            noti.user.add(user)
+            noti.save()
+            devices = FCMDevice.objects.filter(user=user.id)
+            devices.send_message(
+                message=Message(
+                    notification=FirebaseNotification(
+                        title=title,
+                        body=content
+                    ),
+                ),
+            )
+    def __str__(self) -> str:
+        return f'{self.id}-إعلان'
+    
+class Notification(models.Model):
+    user = models.ManyToManyField(CustomUser)
+    poster = models.OneToOneField(Poster, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=1000)
+    created = models.DateTimeField(auto_now_add=True)

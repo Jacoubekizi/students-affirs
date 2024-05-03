@@ -24,3 +24,6 @@ admin.site.register(VerificationCode, VerificationCodeAdmin)
 admin.site.register(Chapter)
 admin.site.register(Objection, ObjectionAdmin)
 admin.site.register(RefuselObjection)
+
+admin.site.register(Poster)
+admin.site.register(Notification)

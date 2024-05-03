@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import *
 from .serializers import *
 
 
@@ -24,10 +24,6 @@ class SignUpView(GenericAPIView):
             code = VerificationCode.objects.create(user=user, code=code_verivecation)
             data= {'to_email':user.email, 'email_subject':'code verify for account','username':user.username, 'code': str(code_verivecation)}
             Utlil.send_email(data)
-        # tokens = {
-        #     'refresh':str(token),
-        #     'accsess':str(token.access_token)
-        # }
         return Response({'information_user':user_data}, status=status.HTTP_201_CREATED)
 
 class VerifyAccount(GenericAPIView):
@@ -74,7 +70,6 @@ class LogoutUser(GenericAPIView):
         serializer.save()
         return Response(status=status.HTTP_200_OK)
     
-######### needs modification to adapt to sms
 class SendCodePassword(GenericAPIView):
     def post(self, request):
         try: 
@@ -90,7 +85,7 @@ class SendCodePassword(GenericAPIView):
             return Response({'message':'تم ارسال رمز التحقق',
                              'user_id' : user.id})
         except:
-            raise serializers.ValidationError("الرجاء ادخال الرقم بشكل صحيح")
+            raise serializers.ValidationError("الرجاء ادخال البريد الاكتروني بشكل صحيح")
         
 class VerifyCode(GenericAPIView):
 
@@ -110,7 +105,6 @@ class VerifyCode(GenericAPIView):
         else:
             return Response("الرجاء اعادة طلب الرمز من جديد")
 
-######### needs modification to adapt to sms
 class ResetPassword(UpdateAPIView):
     serializer_class = ResetPasswordSerializer
 
@@ -168,7 +162,8 @@ class RefuselObjectionView(GenericAPIView):
         refusel_obj = RefuselObjection.objects.filter(objection__user=user)
         serializer = self.get_serializer(refusel_obj, many=True)
         return Response(serializer.data)
-    
+
+#---------------------------------------------------Choice Subject
 class CreateChoiceSubjectView(GenericAPIView):
     permission_classes = [IsAuthenticated,]
     serializer_class = ShoiceSubjectSerializer
@@ -192,3 +187,36 @@ class RetUpdDesObjectionView(RetrieveUpdateDestroyAPIView):
     queryset = ShoiceSubject.objects.all()
     serializer_class = ShoiceSubjectSerializer
     permission_classes = [IsAuthenticated,]
+
+#--------------------------------------------------Poster
+class ListPostersView(ListAPIView):
+    queryset = Poster.objects.all()
+    serializer_class = PosterSerializer
+    permission_classes = [IsAuthenticated,]
+
+class GetPosterView(RetrieveAPIView):
+    queryset = Poster.objects.all()
+    serializer_class = PosterSerializer
+    permission_classes = [IsAuthenticated,]
+
+#---------------------------------------------- Notification
+class ListNotificationView(GenericAPIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = NotificationSerializer
+
+    def get(self, request):
+        user = request.user
+        notification = Notification.objects.filter(user=user)
+        serializer = self.get_serializer(notification, many=True, context={'user':user.username})
+        return Response(serializer.data)
+    
+class GetNotificationView(RetrieveAPIView):
+    queryset = Notification.objects.all()
+    permission_classes = [IsAuthenticated,]
+    serializer_class = NotificationSerializer
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
+    
