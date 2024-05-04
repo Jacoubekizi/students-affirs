@@ -166,3 +166,28 @@ class NotificationSerializer(serializers.ModelSerializer):
         repr = super().to_representation(instance)
         repr['user'] = [user.username for user in instance.user.filter(username=username)]
         return repr
+    
+class RePracticalSerializer(serializers.ModelSerializer):
+        user = serializers.CharField(source='user.username', read_only=True)
+        univercity_id = serializers.IntegerField(source='user.univercity_id', read_only=True)
+
+        class Meta:
+            model = RePractical
+            fields = '__all__'
+            
+
+class PermanenceSerializer(serializers.ModelSerializer):
+        user = serializers.CharField(source='user.username', read_only=True)
+        univercity_id = serializers.IntegerField(source='user.univercity_id', read_only=True)
+
+        class Meta:
+            model = Permanence
+            fields = '__all__'
+
+class DefermentSerializer(serializers.ModelSerializer):
+        user = serializers.CharField(source='user.username', read_only=True)
+        univercity_id = serializers.IntegerField(source='user.univercity_id', read_only=True)
+
+        class Meta:
+            model = Deferment
+            fields = '__all__'

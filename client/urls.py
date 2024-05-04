@@ -27,4 +27,16 @@ urlpatterns = [
     path('get-poster/<str:pk>/', GetPosterView.as_view(), name='get-poster'),
     path('list-notification/', ListNotificationView.as_view(), name='list-notification'),
     path('get-notification/<str:pk>/', GetNotificationView.as_view(), name='get-notification'),
+
+    # Re Practical
+    path('list-create-re-practical/', ListCreateRePracticalView.as_view(), name='list-create-re-practical'),
+    path('ret-upt-des-re-practical/<str:pk>/', RetUptDesRePracticalView.as_view(), name='ret-upt-des-re-practical'),
+
+    # Permanence
+    path('list-create-permanence/', ListCreatePermanenceView.as_view(), name='list-create-permanence'),
+    path('ret-upt-des-permanence/<str:pk>/', RetUptDesPermanenceView.as_view(), name='ret-upt-des-permanence'),
+
+    # Deferment
+    path('list-create-deferment/', ListCreateDefermentView.as_view(), name='list-create-deferment'),
+    path('ret-upt-des-deferment/<str:pk>/', RetUptDesDefermentView.as_view(), name='ret-upt-des-deferment'),
 ]

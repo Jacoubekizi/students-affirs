@@ -219,4 +219,66 @@ class GetNotificationView(RetrieveAPIView):
         context = super().get_serializer_context()
         context['user'] = self.request.user
         return context
+
+# -------------------------------------------------- RePractical
+class ListCreateRePracticalView(ListCreateAPIView):
+    queryset = RePractical.objects.all()
+    serializer_class = RePracticalSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.repractical_set.all()
     
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class RetUptDesRePracticalView(RetrieveUpdateDestroyAPIView):
+    queryset = RePractical.objects.all()
+    serializer_class = RePracticalSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+# ------------------------------------------------------- Permanence
+class ListCreatePermanenceView(ListCreateAPIView):
+    queryset = Permanence.objects.all()
+    serializer_class = PermanenceSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.permanence_set.all()
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class RetUptDesPermanenceView(RetrieveUpdateDestroyAPIView):
+    queryset = Permanence.objects.all()
+    serializer_class = PermanenceSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+# ------------------------------------------------------Deferment
+class ListCreateDefermentView(ListCreateAPIView):
+    queryset = Deferment.objects.all()
+    serializer_class = DefermentSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.deferment_set.all()
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class RetUptDesDefermentView(RetrieveUpdateDestroyAPIView):
+    queryset = Deferment.objects.all()
+    serializer_class = DefermentSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)

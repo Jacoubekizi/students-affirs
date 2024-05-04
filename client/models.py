@@ -1,4 +1,3 @@
-from typing import Iterable
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -116,3 +115,37 @@ class Notification(models.Model):
     title = models.CharField(max_length=50)
     content = models.CharField(max_length=1000)
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        for user in self.user.all():
+            return self.title
+        
+class RePractical(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    year = models.CharField(max_length=20, choices=Year)
+    department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
+    subject = models.CharField(max_length=40)
+
+    def __str__(self) -> str:
+        return f'{self.department}-{self.year}-{self.user.username}إعادة عملي'
+    
+class Permanence(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    year = models.CharField(max_length=20, choices=Year)
+    department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
+    image_id = models.ImageField(upload_to='images/ID')
+    image_university = models.ImageField(upload_to='images/university')
+
+    def __str__(self) -> str:
+        return f'{self.year}-{self.user.username}- وثيقة دوام'
+    
+class Deferment(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    year = models.CharField(max_length=20, choices=Year)
+    department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
+    image_id = models.ImageField(upload_to='images/ID')
+    image_university = models.ImageField(upload_to='images/university')
+    photograph = models.ImageField(upload_to='images/photograph')
+
+    def __str__(self) -> str:
+        return f'{self.year}-{self.user.username}- مصدقة تأجيل'
