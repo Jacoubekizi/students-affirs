@@ -127,6 +127,17 @@ class ResetPassword(UpdateAPIView):
         else:
             return Response({'error':'ليس لديك صلاحية لتغيير كلمة المرور'})
         
+class UpdateImagteView(GenericAPIView):
+    permission_classes= [IsAuthenticated,]
+    
+    def update(self, request):
+        data = request.data['image']
+        user = CustomUser.objects.get(id=request.user.id)
+        user.image = data
+        user.save()
+        return Response('تم تحديث الصورة الشخصية بنجاح')
+# ---------------------------------------------Objection
+        
 class CreateObjectionView(GenericAPIView):
     permission_classes = [IsAuthenticated,]
     serializer_class = ObjectionSerializer
