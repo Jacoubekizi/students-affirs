@@ -129,13 +129,41 @@ class ResetPassword(UpdateAPIView):
         
 class UpdateImagteView(GenericAPIView):
     permission_classes= [IsAuthenticated,]
-    
-    def update(self, request):
+
+    def put(self, request):
         data = request.data['image']
         user = CustomUser.objects.get(id=request.user.id)
         user.image = data
         user.save()
         return Response('تم تحديث الصورة الشخصية بنجاح')
+    
+class UpdateEmailView(GenericAPIView):
+    permission_classes = [IsAuthenticated,]
+
+    def put(self, request):
+        email = request.data['email']
+        user = CustomUser.objects.get(id=request.user.id)
+        user.email = email
+        user.is_verified = False
+        user.save()
+        existing_code = VerificationCode.objects.filter(user=user).first()
+        if existing_code:
+            existing_code.delete()
+        code_verivecation = generate_code()
+        code = VerificationCode.objects.create(user=user, code=code_verivecation)
+        data= {'to_email':user.email, 'email_subject':'code verify for verified account','username':user.username, 'code': str(code_verivecation)}
+        Utlil.send_email(data)
+        return Response({'message':'تم ارسال رمز التحقق',
+                            'user_id' : user.id})
+    
+class RetrieveInfoUser(GenericAPIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = SerializerInformation
+
+    def get(self, request):
+        user = CustomUser.objects.get(id=request.user.id)
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
 # ---------------------------------------------Objection
         
 class CreateObjectionView(GenericAPIView):

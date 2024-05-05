@@ -11,6 +11,9 @@ urlpatterns = [
     path('auth/verify-code/<str:pk>/' , VerifyCode.as_view() , name="verify-code"),
     path('auth/reset-password/<str:user_id>/' , ResetPassword.as_view(), name='reset-password'),
     path('auth/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('update-image/', UpdateImagteView.as_view(), name='update-image'),
+    path('update-email/', UpdateEmailView.as_view(), name='update-email'),
+    path('get-info-user/', RetrieveInfoUser.as_view(), name='get-info-user'),
 
     # ------------------------------------------------
     path('create-objection/', CreateObjectionView.as_view(), name='create-objection'),

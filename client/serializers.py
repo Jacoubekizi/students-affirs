@@ -26,6 +26,14 @@ class SignUpSerializer(serializers.ModelSerializer):
         validated_data.pop('type_verified')
         return CustomUser.objects.create_user(**validated_data)
 
+
+class SerializerInformation(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'username', 'univercity_id','image']
+
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only = True)
