@@ -13,8 +13,9 @@ class CustomUser(AbstractUser):
     email = models.EmailField(max_length=50, unique=True)
     phonenumber = PhoneNumberField(region='SY')
     image = models.ImageField(upload_to='images/users',default='images/account. ')
-    univercity_id = models.IntegerField(default=12, unique=True)
+    univercity_id = models.IntegerField(default=12, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
+    is_employee = models.BooleanField(default=False)
     # type_verified = models.CharField(max_length=30, choices=TypeVerified)
 
     USERNAME_FIELD = 'email'
@@ -28,7 +29,11 @@ class CustomUser(AbstractUser):
         verbose_name = _("User")
         verbose_name_plural = _("Users")
 
+class Employee(models.Model):
+    employee = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return self.employee.username
 
 class VerificationCode(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -58,28 +63,29 @@ class Objection(models.Model):
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     subject = models.CharField(max_length=40)
     teacher = models.CharField(max_length=40)
-    is_refusel = models.BooleanField(default=False)
+    is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.user.username}-{self.type_subject}-{self.subject}-{self.name}'
 
-class RefuselObjection(models.Model):
-    objection = models.OneToOneField(Objection, on_delete=models.CASCADE)
-    reason = models.CharField(max_length=10000)
+# class RefuselObjection(models.Model):
+#     objection = models.OneToOneField(Objection, on_delete=models.CASCADE)
+#     reason = models.CharField(max_length=10000)
 
-    def __str__(self) -> str:
-        return f'{self.objection.subject} على مادة {self.objection.user.username}طلب اعتراض مرفوض باسم'
+#     def __str__(self) -> str:
+#         return f'{self.objection.subject} على مادة {self.objection.user.username}طلب اعتراض مرفوض باسم'
     
-    def save(self, *args, **kwargs) -> None:
-        self.objection.is_refusel = True
-        self.objection.save()
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs) -> None:
+#         self.objection.is_refusel = True
+#         self.objection.save()
+#         super().save(*args, **kwargs)
     
 
 class ShoiceSubject(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     year = models.CharField(max_length=20, choices=Year)
     subject = models.CharField(max_length=40)
+    is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.user.username}-{self.year}-{self.subject}'
@@ -125,6 +131,7 @@ class RePractical(models.Model):
     year = models.CharField(max_length=20, choices=Year)
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     subject = models.CharField(max_length=40)
+    is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.department}-{self.year}-{self.user.username}إعادة عملي'
@@ -135,6 +142,7 @@ class Permanence(models.Model):
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     image_id = models.ImageField(upload_to='images/ID')
     image_university = models.ImageField(upload_to='images/university')
+    is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.year}-{self.user.username}- وثيقة دوام'
@@ -146,6 +154,7 @@ class Deferment(models.Model):
     image_id = models.ImageField(upload_to='images/ID')
     image_university = models.ImageField(upload_to='images/university')
     photograph = models.ImageField(upload_to='images/photograph')
+    is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.year}-{self.user.username}- مصدقة تأجيل'

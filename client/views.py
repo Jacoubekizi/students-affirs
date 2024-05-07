@@ -192,15 +192,15 @@ class RetUpdDesObjectionView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated,]
 
 
-class RefuselObjectionView(GenericAPIView):
-    serializer_class = RefuselObjectionSerializer
-    permission_classes = [IsAuthenticated,]
+# class RefuselObjectionView(GenericAPIView):
+#     serializer_class = RefuselObjectionSerializer
+#     permission_classes = [IsAuthenticated,]
 
-    def get(self, request):
-        user = request.user
-        refusel_obj = RefuselObjection.objects.filter(objection__user=user)
-        serializer = self.get_serializer(refusel_obj, many=True)
-        return Response(serializer.data)
+#     def get(self, request):
+#         user = request.user
+#         refusel_obj = RefuselObjection.objects.filter(objection__user=user)
+#         serializer = self.get_serializer(refusel_obj, many=True)
+#         return Response(serializer.data)
 
 #---------------------------------------------------Choice Subject
 class CreateChoiceSubjectView(GenericAPIView):

@@ -131,12 +131,12 @@ class ObjectionSerializer(serializers.ModelSerializer):
         repr['chapter'] = instance.chapter.chapter
         return repr
     
-class RefuselObjectionSerializer(serializers.ModelSerializer):
-    objection = ObjectionSerializer(read_only=True)
+# class RefuselObjectionSerializer(serializers.ModelSerializer):
+#     objection = ObjectionSerializer(read_only=True)
     
-    class Meta:
-        model = RefuselObjection
-        fields = '__all__'
+#     class Meta:
+#         model = RefuselObjection
+#         fields = '__all__'
 
 class ShoiceSubjectSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.username', read_only=True)

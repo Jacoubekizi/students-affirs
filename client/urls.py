@@ -19,7 +19,7 @@ urlpatterns = [
     path('create-objection/', CreateObjectionView.as_view(), name='create-objection'),
     path('list-objection/', CreateObjectionView.as_view(), name='list-objection'),
     path('get-upt-des-objection/<str:pk>/', RetUpdDesObjectionView.as_view(), name='ret-upt-des-objection'),
-    path('list-refusel-objection/', RefuselObjectionView.as_view(), name='get-refuesl-boj'),
+    # path('list-refusel-objection/', RefuselObjectionView.as_view(), name='get-refuesl-boj'),
 
     # choice subject
     path('list-create-choice-subject/', CreateChoiceSubjectView.as_view(), name='list-create-choice-subject'),
