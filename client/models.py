@@ -179,6 +179,7 @@ class RequestDegreeTransitional(models.Model):
     payment = models.ImageField(upload_to='request_degree/payemnt')
     image_id_front = models.ImageField(upload_to='request_degree_graduation/image_id_front', blank=True, null=True)
     image_id_back = models.ImageField(upload_to='request_degree_graduation/image_id_back', blank=True, null=True)
+    is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.request_degree.user.username}-كشف علامات مرحلة انتقالية'
@@ -189,6 +190,7 @@ class RequestDegreeGraduation(models.Model):
     image_id_front = models.ImageField(upload_to='request_degree_graduation/image_id_front', blank=True, null=True)
     image_id_back = models.ImageField(upload_to='request_degree_graduation/image_id_back', blank=True, null=True)
     passport = models.ImageField(upload_to='request_degree_graduation/passport', blank=True, null=True)
-
+    is_processed = models.BooleanField(default=False)
+    
     def __str__(self) -> str:
         return f'{self.request_degree.user.username}-كشف علامات تخرج'

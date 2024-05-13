@@ -210,7 +210,7 @@ class DefermentAdmin(admin.ModelAdmin):
         queryset.update(is_processed=True)
 
     list_display = ['user', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'photograph', 'is_processed']
-    search_fields = ['user_username']
+    search_fields = ['user__username']
     list_per_page = 25
 
     fieldsets = (
@@ -222,6 +222,49 @@ class DefermentAdmin(admin.ModelAdmin):
     )
 
     list_filter = ['is_processed']
+
+class RequestDegreeGraduationAdmin(admin.ModelAdmin):
+
+    actions = ['processed']
+    def processed(self, request, queryset):
+        queryset.update(is_processed=True)
+
+    list_display = ['request_degree', 'payment', 'image_id_front', 'image_id_back', 'passport', 'is_processed']
+    search_fields = ['request_degree__user__username']
+    list_per_page = 25
+
+    fieldsets = (
+        ('Information',
+            {
+                'classes':('wide',),
+                'fields':('request_degree', 'payment', 'image_id_front', 'image_id_back', 'passport', 'is_processed')}
+        ),
+    )
+
+    list_filter = ['is_processed']
+
+
+class RequestDegreeTransitionalAdmin(admin.ModelAdmin):
+
+    actions = ['processed']
+    def processed(self, request, queryset):
+        queryset.update(is_processed=True)
+
+    list_display = ['request_degree', 'payment', 'image_id_front', 'image_id_back', 'is_processed']
+    search_fields = ['request_degree__user__username']
+    list_per_page = 25
+
+    fieldsets = (
+        ('Information',
+            {
+                'classes':('wide',),
+                'fields':('request_degree', 'payment', 'image_id_front', 'image_id_back', 'is_processed')}
+        ),
+    )
+
+    list_filter = ['is_processed']
+
+
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(VerificationCode, VerificationCodeAdmin)
 admin.site.register(Chapter, ChapterAdmin)
@@ -232,6 +275,8 @@ admin.site.register(Notification, NotificationAdmin)
 admin.site.register(RePractical, RePracticalAdmin)
 admin.site.register(Permanence, PermanenceAdmin)
 admin.site.register(Deferment, DefermentAdmin)
+admin.site.register(RequestDegreeGraduation, RequestDegreeGraduationAdmin)
+admin.site.register(RequestDegreeTransitional, RequestDegreeTransitionalAdmin)
 admin.site.register(Employee)
 
 
@@ -247,10 +292,12 @@ post_admin_site.register(Notification, NotificationAdmin)
 post_admin_site.register(RePractical, RePracticalAdmin)
 post_admin_site.register(Permanence, PermanenceAdmin)
 post_admin_site.register(Deferment, DefermentAdmin)
+post_admin_site.register(RequestDegreeGraduation, RequestDegreeGraduationAdmin)
+post_admin_site.register(RequestDegreeTransitional, RequestDegreeTransitionalAdmin)
 post_admin_site.register(Employee)
 
 # post_admin_site.register(RefuselObjection)
 
 
-admin.site.register(RequestDegreeGraduation)
-admin.site.register(RequestDegree)
+
+# admin.site.register(RequestDegree)
