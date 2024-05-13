@@ -23,7 +23,7 @@ urlpatterns = [
 
     # choice subject
     path('list-create-choice-subject/', CreateChoiceSubjectView.as_view(), name='list-create-choice-subject'),
-    path('get-upt-des-shoice-subject/<str:pk>/', RetUpdDesObjectionView.as_view()),
+    path('get-upt-des-shoice-subject/<str:pk>/', RetUpdDesShoiceSubjectView.as_view()),
 
     # Posters
     path('list-posters/', ListPostersView.as_view(), name='list-posters'),
@@ -42,4 +42,12 @@ urlpatterns = [
     # Deferment
     path('list-create-deferment/', ListCreateDefermentView.as_view(), name='list-create-deferment'),
     path('ret-upt-des-deferment/<str:pk>/', RetUptDesDefermentView.as_view(), name='ret-upt-des-deferment'),
+
+    # Request Degree Graduation
+    path('list-create-request-degree-graduation/', ListCreateRequestDegreeGraduationView.as_view(), name='list-create-request-degree-graduation'),
+    path('ret-upt-des-degree-graduation/<str:pk>/', RetUpdDesRequestDegreeGraduationView.as_view(), name='ret-upt-des-degree-graduation'),
+
+    # Request Degree Transitional
+    path('list-create-request-degree-transitional/', ListCreateRequestDegreeTransitionalView.as_view(), name='list-create-request-degree-transitional'),
+    path('ret-upt-des-degree-transitional/<str:pk>/', RetUpdDesRequestDegreeTransitionalView.as_view(), name='ret-upt-des-degree-transitional'),
 ]

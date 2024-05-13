@@ -55,7 +55,6 @@ class Chapter(models.Model):
         return f'{self.chapter} - {self.type_subject}'
 
 class Objection(models.Model):
-    name = models.CharField(max_length=20, default='اعتراض')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     type_subject = models.CharField(max_length=20, choices=TypeSubject)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
@@ -63,10 +62,11 @@ class Objection(models.Model):
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     subject = models.CharField(max_length=40)
     teacher = models.CharField(max_length=40)
+    payment = models.ImageField(upload_to='objection/payment') #new
     is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return f'{self.user.username}-{self.type_subject}-{self.subject}-{self.name}'
+        return f'{self.user.username}-{self.type_subject}-{self.subject}-اعتراض'
 
 # class RefuselObjection(models.Model):
 #     objection = models.OneToOneField(Objection, on_delete=models.CASCADE)
@@ -131,6 +131,8 @@ class RePractical(models.Model):
     year = models.CharField(max_length=20, choices=Year)
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     subject = models.CharField(max_length=40)
+    image_id_front = models.ImageField(upload_to='re_practical/image_id_front', default='image.png') #new
+    image_id_back = models.ImageField(upload_to='re_practical/image_id_back', default='image.png') #new
     is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -140,8 +142,9 @@ class Permanence(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     year = models.CharField(max_length=20, choices=Year)
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
-    image_id = models.ImageField(upload_to='images/ID')
-    image_university = models.ImageField(upload_to='images/university')
+    image_id_front = models.ImageField(upload_to='permanence/image_id_front')
+    image_id_back = models.ImageField(upload_to='permanence/image_id_back')
+    image_university = models.ImageField(upload_to='permanence/university')
     is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -151,10 +154,41 @@ class Deferment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     year = models.CharField(max_length=20, choices=Year)
     department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
-    image_id = models.ImageField(upload_to='images/ID')
-    image_university = models.ImageField(upload_to='images/university')
-    photograph = models.ImageField(upload_to='images/photograph')
+    image_id_front = models.ImageField(upload_to='defement/image_id_front')
+    image_id_back = models.ImageField(upload_to='defement/image_id_back')
+    image_university = models.ImageField(upload_to='defement/university')
+    photograph = models.ImageField(upload_to='defement/photograph')
     is_processed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.year}-{self.user.username}- مصدقة تأجيل'
+    
+# class ReCorrection(models.Model):
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+class RequestDegree(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'{self.user.username}-كشف علامات'
+
+class RequestDegreeTransitional(models.Model):
+    request_degree = models.ForeignKey(RequestDegree, on_delete=models.CASCADE)
+    year = models.CharField(max_length=20, choices=Year)
+    department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
+    payment = models.ImageField(upload_to='request_degree/payemnt')
+    image_id_front = models.ImageField(upload_to='request_degree_graduation/image_id_front', blank=True, null=True)
+    image_id_back = models.ImageField(upload_to='request_degree_graduation/image_id_back', blank=True, null=True)
+
+    def __str__(self) -> str:
+        return f'{self.request_degree.user.username}-كشف علامات مرحلة انتقالية'
+
+class RequestDegreeGraduation(models.Model):
+    request_degree = models.ForeignKey(RequestDegree, on_delete=models.CASCADE)
+    payment = models.ImageField(upload_to='request_degree/payemnt')
+    image_id_front = models.ImageField(upload_to='request_degree_graduation/image_id_front', blank=True, null=True)
+    image_id_back = models.ImageField(upload_to='request_degree_graduation/image_id_back', blank=True, null=True)
+    passport = models.ImageField(upload_to='request_degree_graduation/passport', blank=True, null=True)
+
+    def __str__(self) -> str:
+        return f'{self.request_degree.user.username}-كشف علامات تخرج'

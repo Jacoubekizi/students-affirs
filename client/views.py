@@ -222,7 +222,7 @@ class CreateChoiceSubjectView(GenericAPIView):
         serializer = self.get_serializer(objection, many=True)
         return Response(serializer.data)
     
-class RetUpdDesObjectionView(RetrieveUpdateDestroyAPIView):
+class RetUpdDesShoiceSubjectView(RetrieveUpdateDestroyAPIView):
     queryset = ShoiceSubject.objects.all()
     serializer_class = ShoiceSubjectSerializer
     permission_classes = [IsAuthenticated,]
@@ -321,3 +321,44 @@ class RetUptDesDefermentView(RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
+
+
+# --------------------------------------------------Request Degree Graduation
+class ListCreateRequestDegreeGraduationView(ListCreateAPIView):
+    queryset = RequestDegreeGraduation.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = RequestDegreeGraduationSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return RequestDegreeGraduation.objects.filter(request_degree__user=user)
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
+    
+class RetUpdDesRequestDegreeGraduationView(RetrieveUpdateDestroyAPIView):
+    queryset = RequestDegreeGraduation.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = RequestDegreeGraduationSerializer
+
+# ------------------------------------------------Request Degree Transitional
+class ListCreateRequestDegreeTransitionalView(ListCreateAPIView):
+    queryset = RequestDegreeTransitional.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = RequestDegreeTransitionalSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return RequestDegreeTransitional.objects.filter(request_degree__user=user)
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
+    
+class RetUpdDesRequestDegreeTransitionalView(RetrieveUpdateDestroyAPIView):
+    queryset = RequestDegreeTransitional.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = RequestDegreeTransitionalSerializer

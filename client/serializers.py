@@ -199,3 +199,42 @@ class DefermentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Deferment
             fields = '__all__'
+
+class RequestDegreeSerializer(serializers.ModelSerializer):
+        user = serializers.CharField(source='user.username', read_only=True)
+
+        class Meta:
+            model = RequestDegree
+            fields = '__all__'
+
+class RequestDegreeTransitionalSerializer(serializers.ModelSerializer):
+        user = serializers.CharField(source='user.username', read_only=True)
+        univercity_id = serializers.IntegerField(source='user.univercity_id', read_only=True)
+
+        class Meta:
+            model = RequestDegreeTransitional
+            # fields = '__all__'
+            exclude = ['request_degree']
+
+        def create(self, validated_data):
+            user = self.context.get('user', None)
+            request_degree = RequestDegree.objects.create(user=user)
+            validated_data['request_degree'] = request_degree
+            instance = RequestDegreeTransitional.objects.create(**validated_data)
+            return instance
+
+
+class RequestDegreeGraduationSerializer(serializers.ModelSerializer):
+        user = serializers.CharField(source='user.username', read_only=True)
+
+        class Meta:
+            model = RequestDegreeGraduation
+            # fields = ['image_id_front', 'image_id_back', 'payment', 'passport']
+            exclude = ['request_degree']
+
+        def create(self, validated_data):
+            user = self.context.get('user', None)
+            request_degree = RequestDegree.objects.create(user=user)
+            validated_data['request_degree'] = request_degree
+            instance = RequestDegreeGraduation.objects.create(**validated_data)
+            return instance

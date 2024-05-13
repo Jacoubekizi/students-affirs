@@ -189,7 +189,7 @@ class PermanenceAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['user', 'year', 'department', 'image_id', 'image_university', 'is_processed']
+    list_display = ['user', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'is_processed']
     search_fields = ['user_username']
     list_per_page = 25
 
@@ -197,7 +197,7 @@ class PermanenceAdmin(admin.ModelAdmin):
         ('Information',
             {
                 'classes':('wide',),
-                'fields':('user', 'year', 'department', 'image_id', 'image_university', 'is_processed')}
+                'fields':('user', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'is_processed')}
         ),
     )
 
@@ -209,7 +209,7 @@ class DefermentAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['user', 'year', 'department', 'image_id', 'image_university', 'photograph', 'is_processed']
+    list_display = ['user', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'photograph', 'is_processed']
     search_fields = ['user_username']
     list_per_page = 25
 
@@ -217,7 +217,7 @@ class DefermentAdmin(admin.ModelAdmin):
         ('Information',
             {
                 'classes':('wide',),
-                'fields':('user', 'year', 'department', 'image_id', 'image_university', 'photograph', 'is_processed')}
+                'fields':('user', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'photograph', 'is_processed')}
         ),
     )
 
@@ -250,3 +250,7 @@ post_admin_site.register(Deferment, DefermentAdmin)
 post_admin_site.register(Employee)
 
 # post_admin_site.register(RefuselObjection)
+
+
+admin.site.register(RequestDegreeGraduation)
+admin.site.register(RequestDegree)
