@@ -84,6 +84,7 @@ class Objection(models.Model):
 class ShoiceSubject(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     year = models.CharField(max_length=20, choices=Year)
+    department = models.CharField(max_length=20, choices=Department, null=True, blank=True)
     subject = models.CharField(max_length=40)
     is_processed = models.BooleanField(default=False)
 

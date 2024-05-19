@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
 from .forms import CustomUserChangeForm, CustomUserCreationForm
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
+
 from .models import *
 # Register your models here.
 
@@ -18,10 +20,15 @@ post_admin_site = PostAdminSite(name='post-admin')
 
 class CustomUserAdmin(UserAdmin):
 
-    actions = ['create_employee']
-    def create_employee(self, request, queryset):
-        user = queryset.get(is_employee=True)
+    actions = ['set_permission_for_employee']
+    def set_permission_for_employee(self, request, queryset):
+        user_id = queryset.update(is_employee=True)
+        user = CustomUser.objects.get(id=user_id)
         Employee.objects.create(employee=user)
+        group = Group.objects.get(name='employee')        
+        group.user_set.add(user)
+        return group
+
 
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -78,7 +85,10 @@ class ObjectionAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['user', 'type_subject', 'chapter', 'subject', 'teacher', 'is_processed']
+    list_display = ['user', 'user_id','type_subject', 'chapter', 'subject', 'teacher', 'is_processed']
+
+    def user_id(self, obj):
+        return obj.user.univercity_id
 
     fieldsets = (
         ('Objection Information',
@@ -93,7 +103,7 @@ class ObjectionAdmin(admin.ModelAdmin):
         ),
     )
 
-    search_fields = ['user__username']
+    search_fields = ['user__username', 'user__univercity_id']
     list_per_page = 25
     list_filter = ['is_processed']
 
@@ -135,17 +145,20 @@ class ShoiceSubjectAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['user', 'year', 'subject', 'is_processed']
+    list_display = ['user', 'user_id', 'year', 'department', 'subject', 'is_processed']
+
+    def user_id(self, obj):
+        return obj.user.univercity_id
 
     fieldsets = (
         ('Information',
             {
                 'classes':('wide',),
-                'fields':('user', 'year', 'subject', 'is_processed')}
+                'fields':('user', 'year', 'department', 'subject', 'is_processed')}
         ),
     )
     
-    search_fields = ['user__username', 'subject', 'year']
+    search_fields = ['user__username', 'subject', 'year', 'user__univercity_id']
     list_per_page = 25
     list_filter = ['is_processed']
 
@@ -169,8 +182,12 @@ class RePracticalAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['user', 'year', 'department', 'subject', 'is_processed']
-    search_fields = ['user', 'subject']
+    list_display = ['user', 'user_id', 'year', 'department', 'subject', 'is_processed']
+
+    def user_id(self, obj):
+        return obj.user.univercity_id
+    
+    search_fields = ['user__username', 'user__univercity_id', 'subject']
     list_per_page = 25
 
     fieldsets = (
@@ -189,8 +206,12 @@ class PermanenceAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['user', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'is_processed']
+    list_display = ['user', 'user_id', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'is_processed']
     search_fields = ['user_username']
+
+    def user_id(self, obj):
+        return obj.user.univercity_id
+    
     list_per_page = 25
 
     fieldsets = (
@@ -202,6 +223,7 @@ class PermanenceAdmin(admin.ModelAdmin):
     )
 
     list_filter = ['is_processed']
+    search_fields = ['user__username', 'user__univercity_id']
 
 class DefermentAdmin(admin.ModelAdmin):
 
@@ -209,10 +231,13 @@ class DefermentAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['user', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'photograph', 'is_processed']
+    list_display = ['user','user_id', 'year', 'department', 'image_id_front', 'image_id_back', 'image_university', 'photograph', 'is_processed']
     search_fields = ['user__username']
     list_per_page = 25
 
+    def user_id(self, obj):
+        return obj.user.univercity_id
+    
     fieldsets = (
         ('Information',
             {
@@ -229,8 +254,12 @@ class RequestDegreeGraduationAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['request_degree', 'payment', 'image_id_front', 'image_id_back', 'passport', 'is_processed']
-    search_fields = ['request_degree__user__username']
+    list_display = ['request_degree', 'user_id', 'payment', 'image_id_front', 'image_id_back', 'passport', 'is_processed']
+
+    def user_id(self, obj):
+        return obj.request_degree.user.univercity_id
+    
+    search_fields = ['request_degree__user__username', 'request_degree__user__univercity_id']
     list_per_page = 25
 
     fieldsets = (
@@ -250,8 +279,12 @@ class RequestDegreeTransitionalAdmin(admin.ModelAdmin):
     def processed(self, request, queryset):
         queryset.update(is_processed=True)
 
-    list_display = ['request_degree', 'payment', 'image_id_front', 'image_id_back', 'is_processed']
-    search_fields = ['request_degree__user__username']
+    list_display = ['request_degree', 'user_id', 'department', 'payment', 'image_id_front', 'image_id_back', 'is_processed']
+
+    def user_id(self, obj):
+        return obj.request_degree.user.univercity_id
+    
+    search_fields = ['request_degree__user__username', 'request_degree__user__univercity_id']
     list_per_page = 25
 
     fieldsets = (
