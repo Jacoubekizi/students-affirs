@@ -5,8 +5,9 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
 from .models import *
-# Register your models here.
 
+admin.site.site_header = "Dashboard"
+admin.site.index_title = "Students Affirs"
 
 class PostAdminSite(admin.AdminSite):
     site_header = "Welcome To Admin Site"
