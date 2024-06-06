@@ -3,6 +3,11 @@ import os
 from datetime import timedelta
 from firebase_admin import initialize_app, credentials
 from google.auth import load_credentials_from_file
+from dotenv import load_dotenv
+import environ
+
+env = environ.Env()
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -66,13 +71,23 @@ WSGI_APPLICATION = 'admin.wsgi.application'
 
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+DATABASES = {
+        'default': {
+            'ENGINE': env('ENGINE_DB'),
+            'NAME': env('NAME_DB'),
+            'USER': env('USER_DB'),
+            'PASSWORD': env('PASSWORD_DB'),
+            'HOST': env('HOST_DB'),
+            'PORT': env('PORT_DB'),
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -159,8 +174,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  
 EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = 'jacoubakizi81@gmail.com'
-EMAIL_HOST_PASSWORD = 'eabqhwegdhezskam'     
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD =  env('EMAIL_HOST_PASSWORD')    
 
 class CustomFirebaseCredentials(credentials.ApplicationDefault):
     def __init__(self, account_file_path: str):
